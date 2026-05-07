@@ -397,16 +397,16 @@ public class FrontendApplication extends Application {
 
     private void showSerialCheck() {
         serialCheckResultLabel.setText("Saisissez un numéro de série puis vérifiez-le.");
-        serialCheckResultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 6; -fx-text-fill: #667085;");
+        serialCheckResultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 4; -fx-text-fill: #667085;");
 
-        VBox page = new VBox(24);
+        VBox page = new VBox(20);
         page.setAlignment(Pos.TOP_CENTER);
-        page.setPadding(new Insets(28, 24, 55, 24));
-        page.setStyle("-fx-background-color: #f8fbff;");
+        page.setPadding(new Insets(30, 24, 40, 24));
+        page.setStyle("-fx-background-color: #f7fbff;");
 
-        HBox reassurance = new HBox(120);
+        HBox reassurance = new HBox(95);
         reassurance.setAlignment(Pos.CENTER);
-        reassurance.setPadding(new Insets(6, 0, 16, 0));
+        reassurance.setPadding(new Insets(4, 0, 30, 0));
         reassurance.getChildren().addAll(
             mutedLabel("Livraison offerte sur les commandes de plus de 50€"),
             mutedLabel("Protection complète sur tous nos produits"),
@@ -414,47 +414,58 @@ public class FrontendApplication extends Application {
         );
 
         Label title = new Label("Vérification d'Authenticité");
-        title.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 32));
+        title.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 34));
         title.setStyle("-fx-text-fill: " + TEXT + ";");
 
         Label subtitle = mutedLabel("Assurez-vous de l'authenticité de vos lunettes avec notre système de vérification");
 
-        VBox form = new VBox(16);
-        form.setMaxWidth(470);
-        form.setPadding(new Insets(32));
-        form.setStyle("-fx-background-color: #e8f4f8; -fx-background-radius: 8;");
+        VBox form = new VBox(13);
+        form.setMaxWidth(400);
+        form.setPadding(new Insets(28, 30, 30, 30));
+        form.setStyle("-fx-background-color: #e6f4f8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(74, 105, 130, 0.18), 18, 0, 0, 6);");
 
-        Label scan = new Label("▦");
+        Label scan = new Label("▥");
         scan.setAlignment(Pos.CENTER);
-        scan.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 30));
-        scan.setStyle("-fx-text-fill: white; -fx-background-color: #5c7186; -fx-background-radius: 999; -fx-min-width: 60; -fx-min-height: 60;");
+        scan.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 26));
+        scan.setStyle("-fx-text-fill: white; -fx-background-color: #586f87; -fx-background-radius: 999; -fx-min-width: 58; -fx-min-height: 58;");
 
         Label serialLabel = new Label("#  Numéro de Série");
-        serialLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+        serialLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14));
         serialLabel.setStyle("-fx-text-fill: " + TEXT + ";");
+        serialLabel.setMaxWidth(Double.MAX_VALUE);
+        serialLabel.setAlignment(Pos.CENTER_LEFT);
 
         TextField serialField = new TextField();
         serialField.setPromptText("Ex: BA-9RK7M3-B325B383");
-        serialField.setStyle("-fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 12;");
+        serialField.setMinHeight(42);
+        serialField.setStyle("-fx-background-color: white; -fx-background-radius: 4; -fx-border-color: #d3dee8; -fx-border-radius: 4; -fx-padding: 10 12 10 12;");
 
         Label format = mutedLabel("Format: XX-XXXX-XXXXXXXX (Ex: LX-2024-AB123456)");
+        format.setFont(Font.font("Verdana", 11));
+        format.setMaxWidth(Double.MAX_VALUE);
+        format.setAlignment(Pos.CENTER_LEFT);
 
-        Button verifyButton = pillButton("🔍 Vérifier l'Authenticité", false);
+        Button verifyButton = new Button("⌕ Vérifier l'Authenticité");
+        verifyButton.setPadding(new Insets(11, 22, 11, 22));
+        verifyButton.setStyle("-fx-background-color: #5f84d8; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;");
         verifyButton.setMaxWidth(Double.MAX_VALUE);
+        verifyButton.setMinHeight(42);
         verifyButton.setOnAction(event -> verifySerial(serialField.getText().trim()));
 
         serialCheckResultLabel.setWrapText(true);
         serialCheckResultLabel.setMaxWidth(Double.MAX_VALUE);
-        serialCheckResultLabel.setPadding(new Insets(14));
+        serialCheckResultLabel.setMinHeight(66);
+        serialCheckResultLabel.setPadding(new Insets(12, 16, 12, 16));
 
         VBox help = new VBox(4);
-        help.setPadding(new Insets(14));
-        help.setStyle("-fx-background-color: rgba(255,255,255,0.45); -fx-background-radius: 6; -fx-border-color: #6ea8ff; -fx-border-width: 0 0 0 4;");
+        help.setPadding(new Insets(13, 16, 13, 16));
+        help.setStyle("-fx-background-color: rgba(255,255,255,0.45); -fx-background-radius: 4; -fx-border-color: #6ea8ff; -fx-border-width: 0 0 0 4;");
         Label helpTitle = new Label("ⓘ Où trouver votre numéro de série ?");
-        helpTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        helpTitle.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 12));
         helpTitle.setStyle("-fx-text-fill: " + TEXT + ";");
         Label helpText = mutedLabel("Le numéro de série se trouve sur la branche intérieure droite de vos lunettes ou sur le certificat fourni lors de l'achat.");
         helpText.setWrapText(true);
+        helpText.setFont(Font.font("Verdana", 11));
         help.getChildren().addAll(helpTitle, helpText);
 
         form.getChildren().addAll(scan, serialLabel, serialField, format, verifyButton, serialCheckResultLabel, help);
@@ -470,7 +481,7 @@ public class FrontendApplication extends Application {
             return;
         }
         serialCheckResultLabel.setText("Vérification en cours...");
-        serialCheckResultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 6; -fx-text-fill: #667085;");
+        serialCheckResultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 4; -fx-text-fill: #667085;");
         mqttOrderClient.checkSerial(serial)
             .thenAccept(result -> Platform.runLater(() -> showSerialResult(
                 "invalid".equalsIgnoreCase(result)
@@ -486,7 +497,7 @@ public class FrontendApplication extends Application {
 
     private void showSerialResult(String message, boolean valid) {
         serialCheckResultLabel.setText(message);
-        serialCheckResultLabel.setStyle("-fx-background-color: " + (valid ? "#9df4e9" : "#ffe0da") + "; -fx-background-radius: 6; -fx-text-fill: " + TEXT + "; -fx-font-weight: bold;");
+        serialCheckResultLabel.setStyle("-fx-background-color: " + (valid ? "#98f0e6" : "#ffe0da") + "; -fx-background-radius: 4; -fx-text-fill: " + TEXT + "; -fx-font-weight: bold;");
     }
 
     private Button navButton(String text, boolean darkHeader) {
