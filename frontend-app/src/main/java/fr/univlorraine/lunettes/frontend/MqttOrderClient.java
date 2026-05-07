@@ -32,7 +32,11 @@ public class MqttOrderClient implements AutoCloseable {
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         client.setCallback(new UiMqttCallback());
-        client.connect(options);
+        try {
+            client.connect(options);
+        } catch (MqttException exception) {
+            System.err.println("MQTT indisponible au demarrage: " + exception.getMessage());
+        }
     }
 
     public String submitOrder(Map<GlassType, Integer> quantities, OrderListener listener) {
