@@ -173,10 +173,12 @@ public class FrontendApplication extends Application {
         }
 
         deliveryBox.getChildren().clear();
-        orderStateLabel.setText("Commande envoyee au backend...");
+        orderStateLabel.setText("Envoi de la commande...");
         showTracking();
 
-        String orderId = mqttOrderClient.submitOrder(quantities, new MqttOrderClient.OrderListener() {
+        String orderId;
+        try {
+            orderId = mqttOrderClient.submitOrder(quantities, new MqttOrderClient.OrderListener() {
             @Override
             public void onValidated() {
                 Platform.runLater(() -> {
@@ -217,7 +219,15 @@ public class FrontendApplication extends Application {
                     showTracking();
                 });
             }
-        });
+            });
+        } catch (IllegalStateException exception) {
+            orderStateLabel.setText("Impossible d'envoyer la commande : " + rootMessage(exception));
+            showTracking();
+            return;
+        }
+
+        orderStateLabel.setText("Commande envoyee au backend...");
+        showTracking();
 
         scheduler.schedule(() -> Platform.runLater(() -> {
             if (orderStateLabel.getText().equals("Commande envoyee au backend...")) {
@@ -225,6 +235,14 @@ public class FrontendApplication extends Application {
                 showTracking();
             }
         }), 10, TimeUnit.SECONDS);
+    }
+
+    private String rootMessage(Throwable throwable) {
+        Throwable cause = throwable;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause.getMessage();
     }
 
     private void displayDelivery(List<ProducedGlass> delivery) {
