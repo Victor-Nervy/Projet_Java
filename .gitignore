@@ -1,8 +1,40 @@
+# Build
 target/
+out/
+bin/
+
+# Maven local repository
 .m2/
+
+# IDE Eclipse
 .classpath
 .project
 .settings/
+
+# IDE IntelliJ
 .idea/
-out/
-bin/
+*.iml
+*.iws
+*.ipr
+
+# IDE VSCode
+.vscode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Paho MQTT persistence (répertoires créés automatiquement à l'exécution)
+lunettes-*-tcplocalhost*/
+lunettes-*-tcp*/
+*.lck
+*.msg
+
+# Logs
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*~

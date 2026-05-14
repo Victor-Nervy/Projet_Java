@@ -41,5 +41,8 @@ jobs:
           </settings>
           EOF
 
+      - name: Run tests
+        run: mvn -B -pl common,usine -am test
+
       - name: Publish usine
-        run: mvn -B -pl common,usine -am deploy
+        run: mvn -B -pl common,usine -am deploy -DskipTests

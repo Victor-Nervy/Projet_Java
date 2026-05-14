@@ -13,6 +13,28 @@
     <artifactId>usine</artifactId>
     <name>lunettes-usine</name>
 
+    <!--
+        NOTE : Le Fabricateur (bernard_flou.Fabricateur) est fourni par le professeur
+        sous forme de package Maven privé à l'adresse :
+          https://maven.pkg.github.com/le-prof-de-raizo/repo-maven
+        groupId   : bernard-flou
+        artifactId: fabricateur
+
+        Pour utiliser cette dépendance externe, ajouter dans ~/.m2/settings.xml :
+          <server>
+            <id>github-prof</id>
+            <username>VOTRE_USERNAME_GITHUB</username>
+            <password>VOTRE_TOKEN_GITHUB</password>
+          </server>
+        puis décommenter le bloc <dependency> ci-dessous et supprimer
+        le fichier usine/src/main/java/bernard_flou/Fabricateur.java.
+
+        Dans le cadre de ce projet, la source du Fabricateur est incluse
+        directement (bernard_flou/Fabricateur.java) pour permettre la compilation
+        sans configuration de credentials externes, conformément à l'implémentation
+        fournie par le professeur.
+    -->
+
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -21,6 +43,13 @@
     </distributionManagement>
 
     <dependencies>
+        <!--
+        <dependency>
+            <groupId>bernard-flou</groupId>
+            <artifactId>fabricateur</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>fr.univlorraine.lunettes</groupId>
             <artifactId>common</artifactId>

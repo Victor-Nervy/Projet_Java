@@ -19,8 +19,12 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MqttOrderClient implements AutoCloseable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MqttOrderClient.class);
 
     private final MqttClient client;
     private final Map<String, Consumer<String>> handlers;
@@ -34,8 +38,9 @@ public class MqttOrderClient implements AutoCloseable {
         client.setCallback(new UiMqttCallback());
         try {
             client.connect(options);
+            LOGGER.info("Frontend connecte au broker {}", config.brokerUrl());
         } catch (MqttException exception) {
-            System.err.println("MQTT indisponible au demarrage: " + exception.getMessage());
+            LOGGER.warn("MQTT indisponible au demarrage: {}", exception.getMessage());
         }
     }
 
@@ -51,6 +56,7 @@ public class MqttOrderClient implements AutoCloseable {
             client.subscribe(TopicNames.orderSubscription(orderId), 1);
             OrderRequest request = new OrderRequest(orderId, quantities);
             client.publish(TopicNames.order(orderId), new MqttMessage(PayloadCodec.encodeOrder(request).getBytes(StandardCharsets.UTF_8)));
+            LOGGER.info("Commande {} envoyee ({} types de lunettes)", orderId, quantities.size());
             return orderId;
         } catch (MqttException exception) {
             throw new IllegalStateException("Impossible d'envoyer la commande", exception);
@@ -71,6 +77,7 @@ public class MqttOrderClient implements AutoCloseable {
         try {
             client.subscribe(replyTopic, 1);
             client.publish(TopicNames.serialCheck(serial), new MqttMessage(new byte[0]));
+            LOGGER.info("Verification serie {} demandee", serial);
         } catch (MqttException exception) {
             future.completeExceptionally(exception);
         }
@@ -89,13 +96,17 @@ public class MqttOrderClient implements AutoCloseable {
 
         @Override
         public void connectionLost(Throwable cause) {
+            LOGGER.warn("Connexion MQTT frontend perdue", cause);
         }
 
         @Override
         public void messageArrived(String topic, MqttMessage message) {
+            LOGGER.debug("Message frontend recu sur {}", topic);
             Consumer<String> handler = handlers.get(topic);
             if (handler != null) {
                 handler.accept(new String(message.getPayload(), StandardCharsets.UTF_8));
+            } else {
+                LOGGER.warn("Aucun handler frontend pour le topic {}", topic);
             }
         }
 
