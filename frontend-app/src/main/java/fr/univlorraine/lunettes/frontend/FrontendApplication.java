@@ -483,12 +483,16 @@ public class FrontendApplication extends Application {
         serialCheckResultLabel.setText("Vérification en cours...");
         serialCheckResultLabel.setStyle("-fx-background-color: white; -fx-background-radius: 4; -fx-text-fill: #667085;");
         mqttOrderClient.checkSerial(serial)
-            .thenAccept(result -> Platform.runLater(() -> showSerialResult(
-                "invalid".equalsIgnoreCase(result)
-                    ? "⚠ Numéro invalide\nLe numéro de série " + serial + " n'est pas valide."
-                    : "✓ Produit Authentique\nLe numéro de série " + serial + " est valide. Type : " + result,
-                !"invalid".equalsIgnoreCase(result)
-            )))
+            .thenAccept(result -> Platform.runLater(() -> {
+                if ("invalid".equalsIgnoreCase(result)) {
+                    showSerialResult("⚠ Numéro invalide\nLe numéro de série " + serial + " n'est pas reconnu.", false);
+                } else {
+                    String modelName = GlassType.fromWireName(result)
+                        .map(GlassType::displayName)
+                        .orElse(result);
+                    showSerialResult("✓ Produit Authentique\nModèle détecté : " + modelName, true);
+                }
+            }))
             .exceptionally(error -> {
                 Platform.runLater(() -> showSerialResult("⚠ Erreur de vérification\n" + rootMessage(error), false));
                 return null;
